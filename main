@@ -1,0 +1,176 @@
+
+#include <iostream>
+#include <time.h>
+#include <cstdlib>
+#include "windows.h"
+#include <conio.h>
+
+using namespace std;
+
+//
+int px = 3, py = 0;
+int ex = 0, ey = -2;
+char movee = ' ';
+bool sss = false;
+int dif = 1;
+
+void setcur(int x, int y)
+{
+	COORD coord;
+	coord.X = x;
+	coord.Y = y;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+}
+
+int cord()
+{
+	int a[] = { 0, 3, 6 };
+	if (sss == true)
+	{
+		return a[rand() % 3];
+		sss = false;
+	}
+	else
+		return a[0];
+}
+
+void Game(string a, string aa, int b, int c, int bb, int cc)
+{
+    string map[30];
+	setcur(0, 0);
+	int sj;
+	switch (dif)
+	{
+	case 1:
+	{
+		sj = 24;
+		break;
+	}
+	case 2:
+	{
+		sj = 12;
+		break;
+	}
+	case 3:
+	{
+		sj = 6;
+		break;
+	}
+	}
+	for (int j = 0; j<sj; j++)
+	{
+		cout << "|";
+		for (int i = 0; i < 9; i++)
+		{
+			map[i] = " ";
+				// Рисуем стену
+				if ((i == bb || i == bb + 1 || i == bb + 2) && j == cc)
+				{
+					map[i] = aa;
+				}			
+				// Рисуем игрока
+				if ((i == b || i == b + 1 || i == b + 2) && j == c)
+				{
+					map[i] = a;
+				}
+				if (i == b + 1 && j == c + 1)
+				{
+					map[i] = a;
+				}
+				if ((i == b || i == b + 1 || i == b + 2) && j == c + 2)
+				{
+					map[i] = a;
+				}
+			//----
+			cout << map[i];
+		}
+		cout << "|       " << "PX/PY:" << px << "/" << py << " EX/EY:" << ex << "/" << ey << endl;
+		
+	}
+}
+
+int main()
+{
+
+	setlocale(LC_ALL, "Rus");
+	cout << "Выбери уровень сложности(1-3):" << endl;
+	cin >> dif;
+	int sj;
+	switch (dif)
+	{
+	case 1:
+	{
+		sj = 24;
+		break;
+	}
+	case 2:
+	{
+		sj = 12;
+		break;
+	}
+	case 3:
+	{
+		sj = 6;
+	}
+	}
+	if (dif == 1) py = 18;
+	if (dif == 2) py = 9;
+	if (dif == 3) py = 3;
+	int speed = 200;
+	int score = 0;
+	while (true)
+	{
+			Sleep(speed);
+			if (speed == 0)
+			{
+				system("cls");
+				cout << "YOU WIN! Your Score: 20/20" << endl;
+				exit(0);
+			}
+			Game("*", "0", px, py, ex, ey);
+			int sjj;
+			if (dif == 1) sjj = 18;
+			if (dif == 2) sjj = 10;
+			if (dif == 3) sjj = 2;
+			if (px == ex && sjj == ey)
+			{
+				
+				system("cls");
+				cout << "YOU LOSE! Your Score: " << score << "/20" << endl;
+				exit(0);
+			}
+			if (ey == sj) { ey = -2; sss = true; ex = cord(); speed = speed - 10; score++; }
+			ey = ey + 2;
+			if(_kbhit())
+			{
+				movee = _getch();
+				if (movee == 'd')
+				{
+					if (px != 6)
+					{
+						px = px + 3;
+					}
+				}
+				if (movee == 'a')
+				{
+					if (px != 0)
+					{
+						px = px - 3;
+					}
+				}
+				movee = ' ';
+			}
+		//if (move == 's')
+		//{
+		//	Map("*", "*", "*", x, y + 1);
+		//	y = y - 3;
+		//	move = ' ';
+		//}
+		//if (move == 'w')
+		//{
+		//	Map("*", "*", "*", x, y - 1);
+		//	y = y + 3;
+		//	move = ' ';
+		//}
+	}
+}
